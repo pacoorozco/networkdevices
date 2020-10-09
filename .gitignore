@@ -1,0 +1,10 @@
+# IDE configuration
+/.idea/
+.history
+
+# Binary releases
+/network-devices-server
+
+# Used for temporary files such as coverage files.
+/.tmp/
+
