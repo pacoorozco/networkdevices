@@ -23,12 +23,11 @@ func NewInMemory() *InMemoryDAL {
 // GetDevice returns the Device that corresponds with the key or ErrDeviceNotFound if it does not exist.
 func (dal *InMemoryDAL) GetDevice(key string) (models.Device, error) {
 	dal.mu.RLock()
+	defer dal.mu.RUnlock()
 	item, found := dal.items[strings.ToLower(key)]
 	if !found {
-		dal.mu.RUnlock()
 		return models.Device{}, ErrDeviceNotFound
 	}
-	dal.mu.RUnlock()
 	return item, nil
 }
 
