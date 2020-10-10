@@ -3,7 +3,7 @@
 .history
 
 # Binary releases
-/network-devices-server
+/deviceManagerAPI
 
 # Used for temporary files such as coverage files.
 /.tmp/
