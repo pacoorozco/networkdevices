@@ -38,7 +38,9 @@ func TestGetDevice(t *testing.T) {
 		checkResponseCode(t, http.StatusNotFound, response.Code)
 
 		var m map[string]string
-		json.Unmarshal(response.Body.Bytes(), &m)
+		if err := json.Unmarshal(response.Body.Bytes(), &m); err != nil {
+			t.Fatalf("error was not expected at this point")
+		}
 		if m["error"] != "Device not found" {
 			t.Errorf("Expected the 'error' key of the response to be set to 'Device not found'. Got '%s'", m["error"])
 		}
@@ -130,7 +132,9 @@ func TestUpdateDevice(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/devices/host-0.domain.com.", nil)
 	response := executeRequest(req)
 	var originalDevice map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &originalDevice)
+	if err := json.Unmarshal(response.Body.Bytes(), &originalDevice); err != nil {
+		t.Fatalf("error was not expected at this point")
+	}
 
 	var jsonStr = []byte(`{"fqdn":"host-0.domain.com.", "model": "nx-os", "version": "1.2"}`)
 	req, _ = http.NewRequest("PUT", "/devices", bytes.NewBuffer(jsonStr))
@@ -141,7 +145,9 @@ func TestUpdateDevice(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, response.Code)
 
 	var m map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &m)
+	if err := json.Unmarshal(response.Body.Bytes(), &m); err != nil {
+		t.Fatalf("error was not expected at this point")
+	}
 
 	if m["fqdn"] != originalDevice["fqdn"] {
 		t.Errorf("Expected the FQDN to remain the same (%v). Got %v", originalDevice["fqdn"], m["fqdn"])
@@ -188,7 +194,10 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 
 func checkResponseBodyContainsDevice(t *testing.T, expected models.Device, body []byte) {
 	var got map[string]interface{}
-	json.Unmarshal(body, &got)
+	if err := json.Unmarshal(body, &got); err != nil {
+		t.Fatalf("error was not expected at this point")
+	}
+
 
 	if expected.FQDN != got["fqdn"] {
 		t.Errorf("FQDN: want: '%s', got: '%v'", expected.FQDN, got["fqdn"])
@@ -216,7 +225,7 @@ func addDevices(count int) []models.Device {
 			Model:   "ios-xe",
 			Version: "v1." + strconv.Itoa(i),
 		}
-		a.Storer.SetDevice(d)
+		_ = a.Storer.SetDevice(d)
 		devices = append(devices, d)
 	}
 
