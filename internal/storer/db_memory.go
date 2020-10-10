@@ -16,7 +16,7 @@ type InMemoryDAL struct {
 // NewInMemory returns a Storer implemented in memory.
 func NewInMemory() *InMemoryDAL {
 	return &InMemoryDAL{
-		items: map[string]models.Device{},
+		items: make(map[string]models.Device, 0),
 	}
 }
 
@@ -36,11 +36,9 @@ func (dal *InMemoryDAL) GetDevice(key string) (models.Device, error) {
 func (dal *InMemoryDAL) GetAllDevices() ([]models.Device, error) {
 	dal.mu.RLock()
 	defer dal.mu.RUnlock()
-	m := make([]models.Device, len(dal.items))
-	var i int
+	m := make([]models.Device, 0)
 	for _, v := range dal.items {
 		m = append(m, v)
-		i++
 	}
 	return m, nil
 }
