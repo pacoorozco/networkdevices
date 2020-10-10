@@ -38,7 +38,7 @@ func (dal *InMemoryDAL) GetAllDevices() ([]models.Device, error) {
 	defer dal.mu.RUnlock()
 	m := make([]models.Device, 0)
 	for _, v := range dal.items {
-		m = append(m, v)
+		m = append(m, v.Presenter())
 	}
 	return m, nil
 }
