@@ -1,9 +1,11 @@
 package main
 
-import "github.com/pacoorozco/networkdevices/internal"
+import (
+	"github.com/pacoorozco/networkdevices/internal/app"
+)
 
 func main() {
-	a := App{}
+	a := app.App{}
 	a.Initialize()
 
 	a.Run(":8010")
