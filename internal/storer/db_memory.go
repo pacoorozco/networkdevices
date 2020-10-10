@@ -50,6 +50,18 @@ func (dal *InMemoryDAL) SetDevice(item models.Device) error {
 	return nil
 }
 
+// AddDevice stores the provided Device into the storage if it doesn't exist.
+// Returns ErrDeviceAlreadyCreated if device exists before creation.
+func (dal *InMemoryDAL) AddDevice(item models.Device) error {
+	dal.mu.Lock()
+	defer dal.mu.Unlock()
+	if _, found := dal.items[strings.ToLower(item.FQDN)]; found {
+		return ErrDeviceAlreadyCreated
+	}
+	dal.items[strings.ToLower(item.FQDN)] = item
+	return nil
+}
+
 // DeleteDevice removes the stored Device under the provided key.
 func (dal *InMemoryDAL) DeleteDevice(key string) error {
 	dal.mu.Lock()

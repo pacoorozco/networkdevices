@@ -52,8 +52,14 @@ func (a *App) createDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := a.Storer.SetDevice(device); err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+	if err := a.Storer.AddDevice(device); err != nil {
+		switch err {
+		case storer.ErrDeviceAlreadyCreated:
+			respondWithError(w, http.StatusConflict, err.Error())
+		default:
+
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 

@@ -94,17 +94,22 @@ func TestCreateDevice(t *testing.T) {
 	}{
 		{
 			name:         "Correct Device",
-			input:        `{"fqdn":"test.domain.com.", "model": "ios-xe", "version": "1.2"}`,
+			input:        `{"fqdn":"test1.domain.com.", "model": "ios-xe", "version": "1.2"}`,
 			wantHttpCode: http.StatusCreated,
 		},
 		{
+			name:         "Already Created Device",
+			input:        `{"fqdn":"test1.domain.com.", "model": "ios-xe", "version": "1.2"}`,
+			wantHttpCode: http.StatusConflict,
+		},
+		{
 			name:         "Correct Device wo/ Version",
-			input:        `{"fqdn":"test.domain.com.", "model": "ios-xe"}`,
+			input:        `{"fqdn":"test2.domain.com.", "model": "ios-xe"}`,
 			wantHttpCode: http.StatusCreated,
 		},
 		{
 			name:         "Invalid Model Should Fail",
-			input:        `{"fqdn":"test.domain.com.", "model": "invalid", "version": "1.2"}`,
+			input:        `{"fqdn":"test3.domain.com.", "model": "invalid", "version": "1.2"}`,
 			wantHttpCode: http.StatusBadRequest,
 		},
 		{
