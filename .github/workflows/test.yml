@@ -1,6 +1,6 @@
 on: [push, pull_request]
 
-name: Test, build and coverage
+name: Test and build
 jobs:
   test-matrix:
     strategy:
